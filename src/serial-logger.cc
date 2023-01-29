@@ -20,6 +20,15 @@ const char * toString(Level level)  {
   }
 }
 
+void Logger::setLevel(Level level) {
+  _level = level;
+}
+
+void Logger::setSerial(HardwareSerial * serial) {
+  serial_ = serial;
+}
+
+
 void Logger::log(Level level, const char * fmt, ...) {
   if (serial_) {
     _LOGGER_STRINGIFY(fmt, fmt);

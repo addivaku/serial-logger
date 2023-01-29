@@ -21,13 +21,9 @@ class Logger {
   static Level _level;
 
   public:
-  static void setLevel(Level level) {
-    _level = level;
-  }
+  static void setLevel(Level level);
 
-  static void setSerial(HardwareSerial* serial) {
-    serial_ = serial;
-  }
+  static void setSerial(HardwareSerial* serial);
 
   template <class T>
   static void log(Level level, T data) {
