@@ -113,3 +113,5 @@ This section contains some ideas that might be integrated at some point.
 - Add the current time (`millis()`) to each log line
 
 - support coloring of different log levels
+
+- Drop limitation of `HardwareSerial` and support `Stream`-like objects
