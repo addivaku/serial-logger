@@ -3,8 +3,6 @@
 
 #include <HardwareSerial.h>
 
-#include "serial-logger-macros.hpp"
-
 namespace logging {
 
 enum class Level {
@@ -15,22 +13,7 @@ enum class Level {
   kCritical
 };
 
-const char * toString(Level level) {
-  switch (level) {
-    case Level::kWarning:
-      return "kWarning";
-    case Level::kInfo:
-      return "kInfo";
-    case Level::kError:
-      return "kError";
-    case Level::kDebug:
-      return "kDebug";
-    case Level::kCritical:
-      return "kCritical";
-    default:
-      return "";
-  }
-}
+const char * toString(Level level);
 
 class Logger {
   private:
@@ -44,14 +27,6 @@ class Logger {
 
   static void setSerial(HardwareSerial* serial) {
     serial_ = serial;
-  }
-
-  //! @deprecated: Use variant with different argument order instead
-  template<class T>
-  static void log(T line, Level level) {
-    warning<>(
-      "(Deprecated): Please use logging::Logger::log(logger::Level, T).");
-    log<>(level, line);
   }
 
   template <class T>
@@ -77,14 +52,7 @@ class Logger {
     }
   }
 
-  static void log(Level level, const char * fmt, ...) {
-    if (serial_) {
-      _LOGGER_STRINGIFY(fmt, fmt);
-      if (data) 
-        log<>(level, data);
-      _LOGGER_STRINGIFY_CLEANUP();
-    }
-  }
+  static void log(Level level, const char * fmt, ...);
 
   template<class T>
   static void info(T line){
@@ -93,14 +61,7 @@ class Logger {
     printLine<>(line, level);
   };
 
-  static void info(const char * fmt, ...) {
-    if (serial_) {
-      _LOGGER_STRINGIFY(fmt, fmt);
-      if (data)
-        info<>(data);
-      _LOGGER_STRINGIFY_CLEANUP();
-    }
-  }
+  static void info(const char * fmt, ...);
 
   template<class T>
   static void debug(T line){
@@ -109,14 +70,7 @@ class Logger {
     printLine<>(line, level);
   };
 
-  static void debug(const char * fmt, ...) {
-    if (serial_) {
-      _LOGGER_STRINGIFY(fmt, fmt);
-      if (data)
-        debug<>(data);
-      _LOGGER_STRINGIFY_CLEANUP();
-    }
-  }
+  static void debug(const char * fmt, ...);
 
   template<class T>
   static void warning(T line){
@@ -125,14 +79,7 @@ class Logger {
     printLine<>(line, level);
   };
 
-  static void warning(const char * fmt, ...) {
-    if (serial_) {
-      _LOGGER_STRINGIFY(fmt, fmt);
-      if (data)
-        warning<>(data);
-      _LOGGER_STRINGIFY_CLEANUP();
-    }
-  }
+  static void warning(const char * fmt, ...);
 
   template<class T>
   static void error(T line){
@@ -141,14 +88,7 @@ class Logger {
     printLine<>(line, level);
   };
 
-  static void error(const char * fmt, ...) {
-    if (serial_) {
-      _LOGGER_STRINGIFY(fmt, fmt);
-      if (data)
-        error<>(data);
-      _LOGGER_STRINGIFY_CLEANUP();
-    }
-  }
+  static void error(const char * fmt, ...);
 
   template<class T>
   static void critical(T line){
@@ -157,19 +97,10 @@ class Logger {
     printLine<>(line, level);
   };
 
-  static void critical(const char * fmt, ...) {
-    if (serial_) {
-      _LOGGER_STRINGIFY(fmt, fmt);
-      if (data)
-        critical<>(data);
-      _LOGGER_STRINGIFY_CLEANUP();
-    }
-  }
+  static void critical(const char * fmt, ...);
 
   
-  static void logLevel(Level level = Level::kInfo) {
-    Logger::log(level, "Log level is: %s", toString(level) );
-  }
+  static void logLevel(Level level = Level::kInfo);
 
 
   private:
@@ -180,35 +111,11 @@ class Logger {
     }
   }
 
-  static void printId(const char * id, Level level) {
-    if (serial_ != nullptr && included_(level) ) {
-      serial_->print(id);
-    }
-  }
+  static void printId(const char * id, Level level);
 
-  static bool included_(Level level) noexcept {
-    if (_level == Level::kDebug) return true; // debug contains everything
-    if (_level == Level::kInfo) {
-      // print everything but debug
-      return level != Level::kDebug;
-    }
-    if (_level == Level::kWarning) {
-      // print kError, kWarning, kCritical
-      return (   level == Level::kWarning 
-              || level == Level::kError
-              || level == Level::kCritical);
-    }
-    if (_level == Level::kError) {
-      // print kError and kCritical
-      return (level == Level::kError || level == Level::kCritical);
-    }
-    if (_level == Level::kCritical) return level == Level::kCritical;
-    return false;
-  }
+  static bool included_(Level level) noexcept;
+
 };
-
-HardwareSerial* Logger::serial_{nullptr};
-Level Logger::_level{Level::kInfo};
 
 }
 
