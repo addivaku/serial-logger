@@ -90,9 +90,10 @@ static void logging::Logger::debug(const char * fmt, ...);
 
 ### Examples
 
-Check the [examples] or look at `serial-logger-meta`'s main code for an
+Check the [examples] or look at [serial-logger-meta]'s main code for an
 interactive test program.
 
+[serial-logger-meta]: https://github.com/addivaku/rotary-encoder-meta
 [examples]: ./examples/
 
 ## Future development
