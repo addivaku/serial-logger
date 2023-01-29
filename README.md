@@ -90,8 +90,10 @@ static void logging::Logger::debug(const char * fmt, ...);
 
 ### Examples
 
-Check the examples folder or look at `serial-logger-meta`'s main code for an
+Check the [examples] or look at `serial-logger-meta`'s main code for an
 interactive test program.
+
+[examples]: ./examples/
 
 ## Future development
 
