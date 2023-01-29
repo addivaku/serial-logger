@@ -111,3 +111,5 @@ This section contains some ideas that might be integrated at some point.
 - Optimize memory usage/handling/allocation
 
 - Add the current time (`millis()`) to each log line
+
+- support coloring of different log levels
