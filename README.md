@@ -93,7 +93,7 @@ static void logging::Logger::debug(const char * fmt, ...);
 Check the [examples] or look at [serial-logger-meta]'s main code for an
 interactive test program.
 
-[serial-logger-meta]: https://github.com/addivaku/rotary-encoder-meta
+[serial-logger-meta]: https://github.com/addivaku/serial-logger-meta
 [examples]: ./examples/
 
 ## Future development
