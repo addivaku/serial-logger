@@ -19,11 +19,20 @@ class Logger {
   private:
   static HardwareSerial * serial_;
   static Level _level;
+  static bool _colorize;
+
+  static const char * kDebugFormat;
+  static const char * kInfoFormat;
+  static const char * kWarningFormat;
+  static const char * kErrorFormat;
+  static const char * kCriticalFormat;
 
   public:
   static void setLevel(Level level);
 
   static void setSerial(HardwareSerial* serial);
+
+  static void colorize(bool flag);
 
   template <class T>
   static void log(Level level, T data) {
@@ -53,7 +62,7 @@ class Logger {
   template<class T>
   static void info(T line){
     auto level = Level::kInfo;
-    printId("[INFO    ] ", level);
+    printId(level);
     printLine<>(line, level);
   };
 
@@ -62,7 +71,7 @@ class Logger {
   template<class T>
   static void debug(T line){
     auto level = Level::kDebug;
-    printId("[DEBUG   ] ", level);
+    printId(level);
     printLine<>(line, level);
   };
 
@@ -71,7 +80,7 @@ class Logger {
   template<class T>
   static void warning(T line){
     auto level = Level::kWarning;
-    printId("[WARNING ] ", level);
+    printId(level);
     printLine<>(line, level);
   };
 
@@ -80,7 +89,7 @@ class Logger {
   template<class T>
   static void error(T line){
     auto level = Level::kError;
-    printId("[ERROR   ] ", level);
+    printId(level);
     printLine<>(line, level);
   };
 
@@ -89,7 +98,7 @@ class Logger {
   template<class T>
   static void critical(T line){
     auto level = Level::kCritical;
-    printId("[CRITICAL] ", level);
+    printId(level);
     printLine<>(line, level);
   };
 
@@ -106,8 +115,11 @@ class Logger {
       serial_->println(line);
     }
   }
+  static void printId(Level level);
 
-  static void printId(const char * id, Level level);
+  static void printId_(const char * id, Level level);
+
+  static void printId_(const char * id, Level level, const char * fontStyle);
 
   static bool included_(Level level) noexcept;
 
