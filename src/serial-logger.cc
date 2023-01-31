@@ -32,6 +32,10 @@ void Logger::colorize(bool enabled) {
   _colorize = enabled;
 }
 
+bool Logger::isColorized() {
+  return _colorize;
+}
+
 
 void Logger::log(Level level, const char * fmt, ...) {
   if (serial_) {
@@ -120,34 +124,19 @@ void Logger::printId(Level level) {
       format = "0";
   }
 
-  if (_colorize) {
-    printId_(id, level, format);
-  } else {
-    printId_(id, level);
-  }
+  printId_(id, level, format);
 }
-
-void Logger::printId_(const char * id, Level level) {
-  if (serial_ != nullptr && included_(level) ) {
-    const auto kWhitespaceLength = 8;
-    const auto kBufferLength = kWhitespaceLength + 2U + 1U + 1U;
-    char * buffer = new char[kBufferLength];
-    snprintf(buffer, kBufferLength, "[%-*s] ", kWhitespaceLength, id);
-    serial_->print(buffer);
-    delete [] buffer;
-  }
-}
-
-
 
 void Logger::printId_(const char * id, Level level, const char * style) {
   if (serial_ != nullptr && included_(level)) {
     // determine size of target string
-    auto format = "[\033[%sm%-*s\033[0m] ";
-    const auto size = snprintf(nullptr, 0, format,  style, 8, id) + 1;
+    // auto format = "[\033[%sm%-*s\033[0m] ";
+    startColorizedSection(style);
+    auto format = "[%-*s] ";
+    const auto size = snprintf(nullptr, 0, format, kIdFieldSize, id) + 1;
 
     auto buffer = new char[size];
-    snprintf(buffer, size, format, style, 8, id);
+    snprintf(buffer, size, format, kIdFieldSize, id);
     serial_->print(buffer);
     delete [] buffer;
   } 
@@ -173,6 +162,28 @@ bool Logger::included_(Level level) noexcept {
   return false;
 }
 
+void Logger::startColorizedSection(const char * fmt) {
+  if (serial_ && _colorize && fmt) {
+    auto colorTemplate = "\033[%sm";
+    const auto size = snprintf(nullptr, 0, colorTemplate, fmt);
+
+    if (size > 0) {
+      char * buffer = new char[size + 1];
+
+      snprintf(buffer, size + 1, colorTemplate, fmt);
+      serial_->print(buffer);
+
+      delete [] buffer;
+    }
+  }
+}
+
+void Logger::endColorizedSection() {
+  if (serial_ && _colorize) {
+    serial_->print("\033[0m");
+  }
+}
+
 HardwareSerial* Logger::serial_{nullptr};
 Level Logger::_level{Level::kInfo};
 bool Logger::_colorize {false};
@@ -180,6 +191,7 @@ const char * Logger::kDebugFormat {"38;5;12"};
 const char * Logger::kInfoFormat {"38;5;10"};
 const char * Logger::kWarningFormat {"38;5;11"};
 const char * Logger::kErrorFormat {"38;5;9"};
-const char * Logger::kCriticalFormat {"48;5;9"};
+const char * Logger::kCriticalFormat {"97;41"};
+const char Logger::kIdFieldSize {8};
 
 }

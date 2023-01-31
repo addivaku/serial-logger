@@ -26,6 +26,7 @@ class Logger {
   static const char * kWarningFormat;
   static const char * kErrorFormat;
   static const char * kCriticalFormat;
+  static const char kIdFieldSize;
 
   public:
   static void setLevel(Level level);
@@ -33,6 +34,8 @@ class Logger {
   static void setSerial(HardwareSerial* serial);
 
   static void colorize(bool flag);
+
+  static bool isColorized();
 
   template <class T>
   static void log(Level level, T data) {
@@ -112,16 +115,20 @@ class Logger {
   template <class T>
   static void printLine(T line, Level level) {
     if (serial_ != nullptr && included_(level) ) {
-      serial_->println(line);
+      serial_->print(line);
+      endColorizedSection();
+      serial_->println();
     }
   }
   static void printId(Level level);
 
-  static void printId_(const char * id, Level level);
-
   static void printId_(const char * id, Level level, const char * fontStyle);
 
   static bool included_(Level level) noexcept;
+
+  static void startColorizedSection(const char * format);
+
+  static void endColorizedSection();
 
 };
 
