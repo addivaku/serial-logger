@@ -31,7 +31,8 @@ The user can choose between the following log levels:
 The listing starts from the most verbose level and ends at the most quiet one.
 Any level contains all following levels, too. If the user chooses `warning`,
 messages designated for the `error` and `critical` level are printed, too.
-Messages flagged with `info` and `debug` are discarded.
+Messages flagged with `info` and `debug` are discarded. If the terminal supports
+it, the messages are colorized in the respective colors.
 
 The user can disable all logging output.
 
@@ -88,6 +89,31 @@ static void logging::Logger::debug(const char * fmt, ...);
 ...
 ```
 
+### Colorization
+
+Per default, the logger does not colorize the log messages. If you use a console
+that supports [ANSI coloring], you might want to enable it to easily identify
+important messages. Known programs that support coloring are
+
+- PlatformIO serial monitor : Start the monitor with the `--raw` option
+
+- PuTTY : Make sure to allow colours in the settings `Window-->Colours`
+
+- picocom
+
+The colors are chosen so that the importance becomes obvious immediately:
+
+- `DEBUG` : blue
+- `INFO` : green
+- `WARNING` : yellow
+- `ERROR` : red
+- `CRITICAL` : red background and white font
+
+Note that the PlatformIO monitor does not show the `CRITICAL` messages
+correctly. You might see just the background with a dark font.
+
+[ANSI coloring]: https://stackoverflow.com/a/33206814
+
 ### Examples
 
 Check the [examples] or look at [serial-logger-meta]'s main code for an
@@ -112,6 +138,4 @@ This section contains some ideas that might be integrated at some point.
 
 - Add the current time (`millis()`) to each log line
 
-- support coloring of different log levels
-
-- Drop limitation of `HardwareSerial` and support `Stream`-like objects
+- Support `Stream`-like objects
