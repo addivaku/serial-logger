@@ -92,7 +92,7 @@ void Logger::critical(const char * fmt, ...) {
 }
 
 void Logger::logLevel(Level level) {
-  Logger::log(level, "Log level is: %s", toString(level) );
+  Logger::log(level, "Log level is: %s", toString(_level) );
 }
 
 void Logger::printId(Level level) {
