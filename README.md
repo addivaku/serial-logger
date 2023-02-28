@@ -89,6 +89,26 @@ static void logging::Logger::debug(const char * fmt, ...);
 ...
 ```
 
+:warning: Please see the limitations that affect this way of logging:
+
+- printing floating point numbers like `float` und `double` is memory-consuming
+  and disabled by default (in platformio). If you have the resources, you can
+  modify your project's `platformio.ini` with
+
+  ```text
+    build_flags = -D PIO_FRAMEWORK_ARDUINO_NANOLIB_FLOAT_PRINTF
+  ```
+
+  See the [PlatformIO Community post] for details.
+
+  :rotating_light: If you use float strings without the above addition, your
+  program might hang!
+
+- `%lu`, `%llu`, and similar identifiers for huge integers are not working as
+  used from other libraries.
+
+[PlatformIO Community post]: https://community.platformio.org/t/how-to-make-stm32duino-support-sprintf-under-arduino-frame/17402/2
+
 ### Colorization
 
 Per default, the logger does not colorize the log messages. If you use a console
