@@ -114,6 +114,20 @@ static void logging::Logger::debug(const char * fmt, ...);
 [PlatformIO Community post]: https://community.platformio.org/t/how-to-make-stm32duino-support-sprintf-under-arduino-frame/17402/2
 [Github Thread]: https://github.com/platformio/platformio-vscode-ide/issues/1385
 
+### Memory optimization
+
+It is known that exhaustive logging is expensive and memory consuming. This
+applies to embedded devices in particular. In this version, disabling logging
+does not disable the internals. Hence, the memory consumption caused by the
+logging module is still very high. If you set the build flag
+
+```
+LOGGER_VOID_ALL
+```
+
+the preprocessor voids all logging content in the module while interface
+remains the same. Note that this also disables logging!
+
 ### Colorization
 
 Per default, the logger does not colorize the log messages. If you use a console
