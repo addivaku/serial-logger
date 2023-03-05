@@ -96,10 +96,14 @@ static void logging::Logger::debug(const char * fmt, ...);
   modify your project's `platformio.ini` with
 
   ```text
+  [env:stm32]
     build_flags = -D PIO_FRAMEWORK_ARDUINO_NANOLIB_FLOAT_PRINTF
+  # or
+  [env:avr]
+    build_flags = -Wl,-u,vfprintf -lprintf_flt -lm
   ```
 
-  See the [PlatformIO Community post] for details.
+  See the [PlatformIO Community post] / [Github Thread] for details.
 
   :rotating_light: If you use float strings without the above addition, your
   program might hang!
@@ -108,6 +112,7 @@ static void logging::Logger::debug(const char * fmt, ...);
   used from other libraries.
 
 [PlatformIO Community post]: https://community.platformio.org/t/how-to-make-stm32duino-support-sprintf-under-arduino-frame/17402/2
+[Github Thread]: https://github.com/platformio/platformio-vscode-ide/issues/1385
 
 ### Colorization
 
