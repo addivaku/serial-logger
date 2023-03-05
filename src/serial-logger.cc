@@ -1,24 +1,8 @@
 #include "serial-logger.hpp"
 #include "serial-logger-macros.hpp"
 
+#if !defined(LOGGER_VOID_ALL)
 namespace logging {
-
-const char * toString(Level level)  {
-  switch (level) {
-    case Level::kWarning:
-      return "kWarning";
-    case Level::kInfo:
-      return "kInfo";
-    case Level::kError:
-      return "kError";
-    case Level::kDebug:
-      return "kDebug";
-    case Level::kCritical:
-      return "kCritical";
-    default:
-      return "";
-  }
-}
 
 void Logger::setLevel(Level level) {
   _level = level;
@@ -38,69 +22,57 @@ bool Logger::isColorized() {
 
 
 void Logger::log(Level level, const char * fmt, ...) {
-  #if defined(_LOGGER_WITH_CONTENT)
-    if (serial_) {
-      _LOGGER_STRINGIFY(fmt, fmt);
-      if (data) 
-        log<>(level, data);
-      _LOGGER_STRINGIFY_CLEANUP();
-    }
-  #endif // _LOGGER_WITH_CONTENT
+  if (serial_) {
+    _LOGGER_STRINGIFY(fmt, fmt);
+    if (data) 
+      log<>(level, data);
+    _LOGGER_STRINGIFY_CLEANUP();
+  }
 }
 
 void Logger::info(const char * fmt, ...) {
-  #if defined(_LOGGER_WITH_CONTENT)
-    if (serial_) {
-      _LOGGER_STRINGIFY(fmt, fmt);
-      if (data)
-        info<>(data);
-      _LOGGER_STRINGIFY_CLEANUP();
-    }
-  #endif // _LOGGER_WITH_CONTENT
+  if (serial_) {
+    _LOGGER_STRINGIFY(fmt, fmt);
+    if (data)
+      info<>(data);
+    _LOGGER_STRINGIFY_CLEANUP();
+  }
 }
 
 void Logger::debug(const char * fmt, ...)  {
-  #if defined(_LOGGER_WITH_CONTENT)
-    if (serial_) {
-      _LOGGER_STRINGIFY(fmt, fmt);
-      if (data)
-        debug<>(data);
-      _LOGGER_STRINGIFY_CLEANUP();
-    }
-  #endif // _LOGGER_WITH_CONTENT
+  if (serial_) {
+    _LOGGER_STRINGIFY(fmt, fmt);
+    if (data)
+      debug<>(data);
+    _LOGGER_STRINGIFY_CLEANUP();
+  }
 }
 
 void Logger::warning(const char * fmt, ...) {
-  #if defined(_LOGGER_WITH_CONTENT)
-    if (serial_) {
-    _LOGGER_STRINGIFY(fmt, fmt);
-    if (data)
-      warning<>(data);
-    _LOGGER_STRINGIFY_CLEANUP();
-    }
-  #endif // _LOGGER_WITH_CONTENT
+  if (serial_) {
+  _LOGGER_STRINGIFY(fmt, fmt);
+  if (data)
+    warning<>(data);
+  _LOGGER_STRINGIFY_CLEANUP();
+  }
 }
 
 void Logger::error(const char * fmt, ...) {
-  #if defined(_LOGGER_WITH_CONTENT)
-    if (serial_) {
-      _LOGGER_STRINGIFY(fmt, fmt);
-      if (data)
-        error<>(data);
-      _LOGGER_STRINGIFY_CLEANUP();
-    }
-  #endif // _LOGGER_WITH_CONTENT
+  if (serial_) {
+    _LOGGER_STRINGIFY(fmt, fmt);
+    if (data)
+      error<>(data);
+    _LOGGER_STRINGIFY_CLEANUP();
+  }
 }
 
 void Logger::critical(const char * fmt, ...) {
-  #if defined(_LOGGER_WITH_CONTENT)
-    if (serial_) {
-      _LOGGER_STRINGIFY(fmt, fmt);
-      if (data)
-        critical<>(data);
-      _LOGGER_STRINGIFY_CLEANUP();
-    }
-  #endif // _LOGGER_WITH_CONTENT
+  if (serial_) {
+    _LOGGER_STRINGIFY(fmt, fmt);
+    if (data)
+      critical<>(data);
+    _LOGGER_STRINGIFY_CLEANUP();
+  }
 }
 
 void Logger::logLevel(Level level) {
@@ -108,54 +80,50 @@ void Logger::logLevel(Level level) {
 }
 
 void Logger::printId(Level level) {
-  #if defined(_LOGGER_WITH_CONTENT)
-    const char * id = nullptr;
-    const char * format = nullptr;
-    switch (level) {
-      case Level::kDebug:
-        id = "DEBUG";
-        format = kDebugFormat;
-        break;
-      case Level::kInfo:
-        id = "INFO";
-        format = kInfoFormat;
-        break;
-      case Level::kWarning:
-        id = "WARNING";
-        format = kWarningFormat;
-        break;
-      case Level::kError:
-        id = "ERROR";
-        format = kErrorFormat;
-        break;
-      case Level::kCritical:
-        id = "CRITICAL";
-        format = kCriticalFormat;
-        break;
-      default:
-        id = "UNDEF";
-        format = "0";
-    }
+  const char * id = nullptr;
+  const char * format = nullptr;
+  switch (level) {
+    case Level::kDebug:
+      id = "DEBUG";
+      format = kDebugFormat;
+      break;
+    case Level::kInfo:
+      id = "INFO";
+      format = kInfoFormat;
+      break;
+    case Level::kWarning:
+      id = "WARNING";
+      format = kWarningFormat;
+      break;
+    case Level::kError:
+      id = "ERROR";
+      format = kErrorFormat;
+      break;
+    case Level::kCritical:
+      id = "CRITICAL";
+      format = kCriticalFormat;
+      break;
+    default:
+      id = "UNDEF";
+      format = "0";
+  }
 
-    printId_(id, level, format);
-  #endif // _LOGGER_WITH_CONTENT
+  printId_(id, level, format);
 }
 
 void Logger::printId_(const char * id, Level level, const char * style) {
-  #if defined(_LOGGER_WITH_CONTENT)
-    if (serial_ != nullptr && included_(level)) {
-      // determine size of target string
-      // auto format = "[\033[%sm%-*s\033[0m] ";
-      startColorizedSection(style);
-      auto format = "[%-*s] ";
-      const auto size = snprintf(nullptr, 0, format, kIdFieldSize, id) + 1;
+  if (serial_ != nullptr && included_(level)) {
+    // determine size of target string
+    // auto format = "[\033[%sm%-*s\033[0m] ";
+    startColorizedSection(style);
+    auto format = "[%-*s] ";
+    const auto size = snprintf(nullptr, 0, format, kIdFieldSize, id) + 1;
 
-      auto buffer = new char[size];
-      snprintf(buffer, size, format, kIdFieldSize, id);
-      serial_->print(buffer);
-      delete [] buffer;
-    } 
-  #endif // _LOGGER_WITH_CONTENT
+    auto buffer = new char[size];
+    snprintf(buffer, size, format, kIdFieldSize, id);
+    serial_->print(buffer);
+    delete [] buffer;
+  } 
 }
 
 bool Logger::included_(Level level) noexcept {
@@ -179,29 +147,25 @@ bool Logger::included_(Level level) noexcept {
 }
 
 void Logger::startColorizedSection(const char * fmt) {
-  #if defined(_LOGGER_WITH_CONTENT)
-    if (serial_ && _colorize && fmt) {
-      auto colorTemplate = "\033[%sm";
-      const auto size = snprintf(nullptr, 0, colorTemplate, fmt);
+  if (serial_ && _colorize && fmt) {
+    auto colorTemplate = "\033[%sm";
+    const auto size = snprintf(nullptr, 0, colorTemplate, fmt);
 
-      if (size > 0) {
-        char * buffer = new char[size + 1];
+    if (size > 0) {
+      char * buffer = new char[size + 1];
 
-        snprintf(buffer, size + 1, colorTemplate, fmt);
-        serial_->print(buffer);
+      snprintf(buffer, size + 1, colorTemplate, fmt);
+      serial_->print(buffer);
 
-        delete [] buffer;
-      }
+      delete [] buffer;
     }
-  #endif (_LOGGER_WITH_CONTENT)
+  }
 }
 
 void Logger::endColorizedSection() {
-  #if defined(_LOGGER_WITH_CONTENT)
-    if (serial_ && _colorize) {
-      serial_->print("\033[0m");
-    }
-  #endif (_LOGGER_WITH_CONTENT)
+  if (serial_ && _colorize) {
+    serial_->print("\033[0m");
+  }
 }
 
 HardwareSerial* Logger::serial_{nullptr};
@@ -215,3 +179,5 @@ const char * Logger::kCriticalFormat {"97;41"};
 const char Logger::kIdFieldSize {8};
 
 }
+
+#endif // !defined(LOGGER_VOID_ALL)

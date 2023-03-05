@@ -2,30 +2,13 @@
 #define SERIAL_LOGGER_SERIAL_LOGGER_HPP_
 
 #include <HardwareSerial.h>
+#include "serial-logger-types.hpp"
 
 // Use LOGGER_NO_CONTENT to avoid any print to the console
-#if !defined(LOGGER_VOID_ALL)
-#define _LOGGER_WITH_CONTENT
-#endif // LOGGER_VOID_ALL
-
+#if defined(LOGGER_VOID_ALL)
+ #include "./private/serial-logger-stub.hpp"
+#else 
 namespace logging {
-
-//! Enumeration of all log levels
-enum class Level {
-  kWarning,
-  kInfo,
-  kError,
-  kDebug,
-  kCritical
-};
-
-/*!
-  Utility function to convert \a Level enumerators to printable char arrays
-
-  \param level The enumerator to convert
-  \returns A pointer to the converted description.
-*/
-const char * toString(Level level);
 
 /*!
   Logger class maintaining and providing logging resources
@@ -311,5 +294,8 @@ class Logger {
 };
 
 }
+
+#endif // LOGGER_VOID_ALL
+
 
 #endif // SERIAL_LOGGER_SERIAL_LOGGER_HPP_
