@@ -4,6 +4,8 @@
 #include <HardwareSerial.h>
 #include "serial-logger-types.hpp"
 
+#if defined(LOGGER_VOID_ALL)
+
 namespace logging {
 
 /*!
@@ -155,5 +157,7 @@ class Logger {
 };
 
 }
+
+#endif //LOGGER_VOID_ALL
 
 #endif // SERIAL_LOGGER_SERIAL_LOGGER_STUB_HPP_

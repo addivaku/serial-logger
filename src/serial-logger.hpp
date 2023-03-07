@@ -67,28 +67,25 @@ class Logger {
    */
   template <class T>
   static void log(Level level, T data) {
-
-    #if defined(_LOGGER_WITH_CONTENT)
-      switch (level) {
-        case Level::kDebug:
-          debug<>(data);
-          break;
-        case Level::kInfo:
-          info<>(data);
-          break;
-        case Level::kError:
-          error<>(data);
-          break;
-        case Level::kWarning:
-          warning<>(data);
-          break;
-        case Level::kCritical:
-          critical<>(data);
-          break;
-        default:
-          debug(data);
-      }
-    #endif // _LOGGER_WITH_CONTENT
+    switch (level) {
+      case Level::kDebug:
+        debug<>(data);
+        break;
+      case Level::kInfo:
+        info<>(data);
+        break;
+      case Level::kError:
+        error<>(data);
+        break;
+      case Level::kWarning:
+        warning<>(data);
+        break;
+      case Level::kCritical:
+        critical<>(data);
+        break;
+      default:
+        debug(data);
+    }
   }
 
   /**
@@ -108,11 +105,9 @@ class Logger {
    */
   template<class T>
   static void info(T data){
-    #if defined(_LOGGER_WITH_CONTENT)
-      auto level = Level::kInfo;
-      printId(level);
-      printLine<>(data, level);
-    #endif // _LOGGER_WITH_CONTENT
+    auto level = Level::kInfo;
+    printId(level);
+    printLine<>(data, level);
   };
 
   /**
@@ -131,12 +126,9 @@ class Logger {
    */
   template<class T>
   static void debug(T line){
-
-    #if defined(_LOGGER_WITH_CONTENT)
-      auto level = Level::kDebug;
-      printId(level);
-      printLine<>(line, level);
-    #endif // _LOGGER_WITH_CONTENT
+    auto level = Level::kDebug;
+    printId(level);
+    printLine<>(line, level);
   };
 
   /**
@@ -155,12 +147,9 @@ class Logger {
    */
   template<class T>
   static void warning(T line){
-
-    #if defined(_LOGGER_WITH_CONTENT)
-      auto level = Level::kWarning;
-      printId(level);
-      printLine<>(line, level);
-    #endif // _LOGGER_WITH_CONTENT
+    auto level = Level::kWarning;
+    printId(level);
+    printLine<>(line, level);
   };
 
   /**
@@ -179,12 +168,9 @@ class Logger {
    */
   template<class T>
   static void error(T line){
-
-    #if defined(_LOGGER_WITH_CONTENT)
-      auto level = Level::kError;
-      printId(level);
-      printLine<>(line, level);
-    #endif // _LOGGER_WITH_CONTENT
+    auto level = Level::kError;
+    printId(level);
+    printLine<>(line, level);
   };
 
   /**
@@ -203,12 +189,9 @@ class Logger {
    */
   template<class T>
   static void critical(T line){
-
-    #if defined(_LOGGER_WITH_CONTENT)
-      auto level = Level::kCritical;
-      printId(level);
-      printLine<>(line, level);
-    #endif // _LOGGER_WITH_CONTENT
+    auto level = Level::kCritical;
+    printId(level);
+    printLine<>(line, level);
   };
 
   /**
@@ -233,14 +216,11 @@ class Logger {
    */
   template <class T>
   static void printLine(T line, Level level) {
-
-    #if defined(_LOGGER_WITH_CONTENT)
-      if (serial_ != nullptr && included_(level) ) {
-        serial_->print(line);
-        endColorizedSection();
-        serial_->println();
-      }
-    #endif // _LOGGER_WITH_CONTENT
+    if (serial_ != nullptr && included_(level) ) {
+      serial_->print(line);
+      endColorizedSection();
+      serial_->println();
+    }
   }
 
   /**
