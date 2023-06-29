@@ -116,11 +116,17 @@ void Logger::printId_(const char * id, Level level, const char * style) {
     // determine size of target string
     // auto format = "[\033[%sm%-*s\033[0m] ";
     startColorizedSection(style);
-    auto format = "[%-*s] ";
-    const auto size = snprintf(nullptr, 0, format, kIdFieldSize, id) + 1;
+    // avr-gcc fails on variable width precision like %-*s. To work around this
+    // issue, we add a seperate buffer for that
+    const char kFormatTemplate[]= "[%%-%us] ";
+    const size_t kFormatSize = sizeof(kFormatTemplate) + 1U;
+    char format[kFormatSize];
+    snprintf(format, kFormatSize, kFormatTemplate, kIdFieldSize);
+    
+    const auto size = snprintf(nullptr, 0, format, id) + 1;
 
     auto buffer = new char[size];
-    snprintf(buffer, size, format, kIdFieldSize, id);
+    snprintf(buffer, size, format, id);
     serial_->print(buffer);
     delete [] buffer;
   } 
