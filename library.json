@@ -15,7 +15,7 @@
     "email": "addivaku@gmail.com",
     "maintainer": true
   },
-  "license": "-",
+  "license": "MIT",
   "build": {
     "flags" : [
       "-w"
