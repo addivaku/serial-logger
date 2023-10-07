@@ -38,11 +38,5 @@
         "HelloWorld.cc"
       ]
     }
-  ],
-  "export" : {
-    "exclude" : [
-      ".git",
-      ".svn"
-    ]
-  }
+  ]
 }
