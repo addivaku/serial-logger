@@ -5,28 +5,38 @@
 namespace logging {
 
 Logger::Logger(const char *name) : 
-    name_{name}, serial_{nullptr}, _level {Level::kInfo}, _colorize{false} {
-
+    serial_{nullptr},
+    level_ {Level::kInfo},
+    colorize_{false} {
+  name_ = new char[ strlen(name) + 1];
+  strcpy(name_, name);
 }
 
 Logger::Logger() : Logger("global") {
 
 }
 
-void Logger::setLevel(Level level) {
-  _level = level;
+Logger::~Logger() {
+  delete [] name_;
 }
 
-void Logger::setSerial(HardwareSerial * serial) {
+Logger& Logger::setLevel(Level level) {
+  level_ = level;
+  return *this;
+}
+
+Logger& Logger::setSerial(HardwareSerial * serial) {
   serial_ = serial;
+  return *this;
 }
 
-void Logger::colorize(bool enabled) {
-  _colorize = enabled;
+Logger& Logger::colorize(bool enabled) {
+  colorize_ = enabled;
+  return *this;
 }
 
 bool Logger::isColorized() {
-  return _colorize;
+  return colorize_;
 }
 
 
@@ -85,7 +95,7 @@ void Logger::critical(const char * fmt, ...) {
 }
 
 void Logger::logLevel(Level level) {
-  Logger::log(level, "Log level is: %s", toString(_level) );
+  Logger::log(level, "Log level is: %s", toString(level_) );
 }
 
 void Logger::printId(Level level) {
@@ -127,7 +137,7 @@ void Logger::printId_(const char * id, Level level, const char * style) {
     startColorizedSection(style);
     // avr-gcc fails on variable width precision like %-*s. To work around this
     // issue, we add a seperate buffer
-    const char kFormatTemplate[]= "[%%s][%%-%us] ";
+    const char kFormatTemplate[]= "{%%s} - [%%-%us] ";
     const size_t kFormatSize = sizeof(kFormatTemplate) + 1U;
     char format[kFormatSize];
     snprintf(format, kFormatSize, kFormatTemplate, kIdFieldSize);
@@ -142,27 +152,27 @@ void Logger::printId_(const char * id, Level level, const char * style) {
 }
 
 bool Logger::included_(Level level) noexcept {
-  if (_level == Level::kDebug) return true; // debug contains everything
-  if (_level == Level::kInfo) {
+  if (level_ == Level::kDebug) return true; // debug contains everything
+  if (level_ == Level::kInfo) {
     // print everything but debug
     return level != Level::kDebug;
   }
-  if (_level == Level::kWarning) {
+  if (level_ == Level::kWarning) {
     // print kError, kWarning, kCritical
     return (   level == Level::kWarning 
             || level == Level::kError
             || level == Level::kCritical);
   }
-  if (_level == Level::kError) {
+  if (level_ == Level::kError) {
     // print kError and kCritical
     return (level == Level::kError || level == Level::kCritical);
   }
-  if (_level == Level::kCritical) return level == Level::kCritical;
+  if (level_ == Level::kCritical) return level == Level::kCritical;
   return false;
 }
 
 void Logger::startColorizedSection(const char * fmt) {
-  if (serial_ && _colorize && fmt) {
+  if (serial_ && colorize_ && fmt) {
     auto colorTemplate = "\033[%sm";
     const auto size = snprintf(nullptr, 0, colorTemplate, fmt);
 
@@ -178,7 +188,7 @@ void Logger::startColorizedSection(const char * fmt) {
 }
 
 void Logger::endColorizedSection() {
-  if (serial_ && _colorize) {
+  if (serial_ && colorize_) {
     serial_->print("\033[0m");
   }
 }

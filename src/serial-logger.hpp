@@ -15,10 +15,10 @@ namespace logging {
 */
 class Logger {
   private:
-  const char * name_;
+  char * name_;
   HardwareSerial * serial_;
-  Level _level;
-  bool _colorize;
+  Level level_;
+  bool colorize_;
 
   static const char * kDebugFormat;
   static const char * kInfoFormat;
@@ -28,16 +28,33 @@ class Logger {
   static const char kIdFieldSize;
 
   public:
+  /**
+   * @brief Construct a new Logger object with the default name `global`
+   * 
+   */
   Logger();
 
+  /**
+   * @brief Construct a new Logger object with @a name
+   * 
+   * @param name The name of the logger. Is part of the log entries it creates.
+   */
   Logger(const char * name);
+
+  /**
+   * @brief Destroy the Logger object
+   * 
+   */
+  virtual ~Logger();
 
   /**
    * @brief Configure the log level
    * 
    * @param level The log level
+   * 
+   * @return The reference of the object
    */
-  void setLevel(Level level);
+  Logger& setLevel(Level level);
 
   /**
    * @brief Provide the serial object used to send the log lines
@@ -45,15 +62,19 @@ class Logger {
    * If you set \a serial to nullptr, logging is disabled.
    * 
    * @param serial The serial instance or nullptr
+   * 
+   * @return The reference of the object
    */
-  void setSerial(HardwareSerial* serial);
+  Logger& setSerial(HardwareSerial* serial);
 
   /**
    * @brief Enable or disable colorization
    * 
    * @param flag Whether or not colorization shall be used
+   * 
+   * @return The reference of the object
    */
-  void colorize(bool flag);
+  Logger& colorize(bool flag);
 
   /**
    * @brief Check the current colorization setting

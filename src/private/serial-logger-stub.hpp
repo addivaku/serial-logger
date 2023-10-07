@@ -13,9 +13,23 @@ namespace logging {
 */
 class Logger {
   public:
+  /**
+   * @brief Construct a new Logger object
+   * 
+   */
   Logger() = default;
 
+  /**
+   * @brief Construct a new Logger object
+   * 
+   */
   Logger(const char *) : Logger(){};
+
+  /**
+   * @brief Destroy the Logger object
+   * 
+   */
+  virtual ~Logger() = default;
 
   /**
    * @brief Configure the GLOBAL log level
