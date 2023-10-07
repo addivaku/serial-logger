@@ -4,7 +4,7 @@
 #include <HardwareSerial.h>
 #include "serial-logger-types.hpp"
 
-// Use LOGGER_NO_CONTENT to avoid any print to the console
+// Use LOGGER_VOID_ALL to avoid any printing to the console
 #if defined(LOGGER_VOID_ALL)
  #include "./private/serial-logger-stub.hpp"
 #else 

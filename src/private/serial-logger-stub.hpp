@@ -36,7 +36,9 @@ class Logger {
    * 
    * @param level The log level
    */
-  static void setLevel(Level /* level */ ) {}
+  Logger& setLevel(Level /* level */ ) {
+    return *this;
+  }
 
   /**
    * @brief Provide the serial object used to send the log lines
@@ -45,14 +47,18 @@ class Logger {
    * 
    * @param serial The serial instance or nullptr
    */
-  static void setSerial(HardwareSerial* /* serial */) { }
+  Logger& setSerial(HardwareSerial* /* serial */) {
+    return *this;
+  }
 
   /**
    * @brief Enable or disable colorization
    * 
    * @param flag Whether or not colorization shall be used
    */
-  static void colorize(bool /* flag */) { }
+  Logger& colorize(bool /* flag */) {
+    return *this;
+  }
 
   /**
    * @brief Check the current colorization setting
@@ -60,7 +66,7 @@ class Logger {
    * @return true if colorization is enabled
    * @return false  if colorization is disabled
    */
-  static bool isColorized() { return false; }
+  bool isColorized() { return false; }
 
   /**
    * @brief Log some \a data with the provided severity
@@ -70,7 +76,7 @@ class Logger {
    * @param data The data to log
    */
   template <class T>
-  static void log(Level /* level */, T /* data */) { }
+  void log(Level /* level */, T /* data */) { }
 
   /**
    * @brief Log any message using the c-ish `printf` formatting
@@ -79,7 +85,7 @@ class Logger {
    * @param fmt The format following the `printf` logic
    * @param ... The data to fill in the format string
    */
-  static void log(Level /* level */ , const char * /* fmt */, ...) { }
+  void log(Level /* level */ , const char * /* fmt */, ...) { }
 
   /**
    * @brief Log any data using the `kInfo` log level
@@ -88,7 +94,7 @@ class Logger {
    * @param data The data to print
    */
   template<class T>
-  static void info(T /* data*/ ){ }
+  void info(T /* data*/ ){ }
 
   /**
    * @brief Log any data on the kInfo level using `printf` logic
@@ -96,7 +102,7 @@ class Logger {
    * @param fmt The format of the text
    * @param ... The data to be added to the format
    */
-  static void info(const char * /* fmt */, ...) {}
+  void info(const char * /* fmt */, ...) {}
 
   /**
    * @brief Log any data using the `kDebug` log level
@@ -105,7 +111,7 @@ class Logger {
    * @param data The data to print
    */
   template<class T>
-  static void debug(T /* line */){ };
+  void debug(T /* line */){ };
 
   /**
    * @brief Log any data on the kDebug level using `printf` logic
@@ -113,7 +119,7 @@ class Logger {
    * @param fmt The format of the text
    * @param ... The data to be added to the format
    */
-  static void debug(const char * /* fmt */ , ...) { }
+  void debug(const char * /* fmt */ , ...) { }
 
   /**
    * @brief Log any data using the `kWarning` log level
@@ -122,7 +128,7 @@ class Logger {
    * @param data The data to print
    */
   template<class T>
-  static void warning(T /* line */){ };
+  void warning(T /* line */){ };
 
   /**
    * @brief Log any data on the kWarning level using `printf` logic
@@ -130,7 +136,7 @@ class Logger {
    * @param fmt The format of the text
    * @param ... The data to be added to the format
    */
-  static void warning(const char * /* fmt */, ...) {}
+  void warning(const char * /* fmt */, ...) {}
 
   /**
    * @brief Log any data using the `kError` log level
@@ -139,7 +145,7 @@ class Logger {
    * @param data The data to print
    */
   template<class T>
-  static void error(T /* line */ ){ };
+  void error(T /* line */ ){ };
 
   /**
    * @brief Log any data on the kError level using `printf` logic
@@ -147,7 +153,7 @@ class Logger {
    * @param fmt The format of the text
    * @param ... The data to be added to the format
    */
-  static void error(const char * /* fmt */ , ...) { }
+  void error(const char * /* fmt */ , ...) { }
 
   /**
    * @brief Log any data using the `kError` log level
@@ -156,7 +162,7 @@ class Logger {
    * @param data The data to print
    */
   template<class T>
-  static void critical(T /* line */){ };
+  void critical(T /* line */){ };
 
   /**
    * @brief Log any data on the kError level using `printf` logic
@@ -164,14 +170,14 @@ class Logger {
    * @param fmt The format of the text
    * @param ... The data to be added to the format
    */
-  static void critical(const char * /* fmt */, ...) { }
+  void critical(const char * /* fmt */, ...) { }
 
   /**
    * @brief Write the current log level configuration to the logs
    * 
    * @param level The level used for this message
    */
-  static void logLevel(Level /* level */) { }
+  void logLevel(Level /* level */ = Level::kInfo) { }
 };
 
 }
