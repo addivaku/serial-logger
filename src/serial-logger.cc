@@ -4,6 +4,15 @@
 #if !defined(LOGGER_VOID_ALL)
 namespace logging {
 
+Logger::Logger(const char *name) : 
+    name_{name}, serial_{nullptr}, _level {Level::kInfo}, _colorize{false} {
+
+}
+
+Logger::Logger() : Logger("global") {
+
+}
+
 void Logger::setLevel(Level level) {
   _level = level;
 }
@@ -117,16 +126,16 @@ void Logger::printId_(const char * id, Level level, const char * style) {
     // auto format = "[\033[%sm%-*s\033[0m] ";
     startColorizedSection(style);
     // avr-gcc fails on variable width precision like %-*s. To work around this
-    // issue, we add a seperate buffer for that
-    const char kFormatTemplate[]= "[%%-%us] ";
+    // issue, we add a seperate buffer
+    const char kFormatTemplate[]= "[%%s][%%-%us] ";
     const size_t kFormatSize = sizeof(kFormatTemplate) + 1U;
     char format[kFormatSize];
     snprintf(format, kFormatSize, kFormatTemplate, kIdFieldSize);
     
-    const auto size = snprintf(nullptr, 0, format, id) + 1;
+    const auto size = snprintf(nullptr, 0, format, name_, id) + 1;
 
     auto buffer = new char[size];
-    snprintf(buffer, size, format, id);
+    snprintf(buffer, size, format, name_, id);
     serial_->print(buffer);
     delete [] buffer;
   } 
@@ -174,9 +183,6 @@ void Logger::endColorizedSection() {
   }
 }
 
-HardwareSerial* Logger::serial_{nullptr};
-Level Logger::_level{Level::kInfo};
-bool Logger::_colorize {false};
 const char * Logger::kDebugFormat {"38;5;12"};
 const char * Logger::kInfoFormat {"38;5;10"};
 const char * Logger::kWarningFormat {"38;5;11"};

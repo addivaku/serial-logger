@@ -13,6 +13,10 @@ namespace logging {
 */
 class Logger {
   public:
+  Logger() = default;
+
+  Logger(const char *) : Logger(){};
+
   /**
    * @brief Configure the GLOBAL log level
    * 
