@@ -1,4 +1,4 @@
-# serial-logger
+# serial-logger <!-- omit from toc -->
 
 ![IDE](https://img.shields.io/badge/IDE-VS%20Code-blue?logo=visual-studio-code)
 ![cpp](https://img.shields.io/badge/Language-C%2B%2B-%2300599C?logo=C%2B%2B)
@@ -10,6 +10,19 @@ A simple and lightweight logging tool for the `Arduino` framework. Designed as
 `Platform IO` library, it provides the user with the ability to output logging
 details via the serial console. The user can decide about the log level and
 which serial instance to use. The library allows filtering messages by severity.
+
+## Table of Content <!-- omit from toc -->
+
+- [Features](#features)
+- [Integration](#integration)
+  - [IDE integration](#ide-integration)
+  - [Interface usage](#interface-usage)
+  - [Memory optimization](#memory-optimization)
+  - [Colorization](#colorization)
+  - [Examples](#examples)
+- [Future development](#future-development)
+  - [Road map](#road-map)
+  - [Ideas](#ideas)
 
 ## Features
 
@@ -58,8 +71,8 @@ The module is wrapped in the `logging` namespace. The most important classes are
 1. the `logging::Level` class which defines the log levels (=severity) and
 2. the `logging::Logger` class which defines the logging interface.
 
-The logger is implemented as a pure static class. You need to assign it a
-pointer to an instance of the `HardwareSerial` class via the
+To use the logger, you need to create an object first. To enable logging, you
+need to assign it a pointer to an instance of the `HardwareSerial` class via the
 `logging::Logger::setSerial` interface. If you set `nullptr` (default case),
 all log requests are dropped.
 
@@ -74,31 +87,31 @@ message:
 2. `logging::Logger::<level>(<message>)`
 
 While the first option is pretty straightforward, the second one requires most
-probably an explanation. The `Logger` class exposes one method for each severity
-that issues a message with the respective severity. They are basically wrappers
-for the `logging::Logger::log(...)` method.
+probably an explanation. The `Logger` class exposes one method for each level
+that issues a message flagged with the respective severity. Those methods are
+basically wrappers for the `logging::Logger::log(...)` method.
 
 The interface the logging methods expose is pretty similar to that of Arduino's
 `HardwareSeria` class. It uses a template definition so that you are able to
-pass every data type you want to print:
+pass every data type you want to it:
 
 ```cpp
 template <classname T>
-static void logging::Logger::log(logging::Level level, T data);
+void logging::Logger::log(logging::Level level, T data);
 
 template <classname T>
-static void logging::Logger::<level>(T data);
+void logging::Logger::{debug, info, warning, error, critical}(T data);
 ```
 
-Please note that the `data` is forward to `HardwareSerial`'s `println` method.
+Please note that the `data` is forwarded to `HardwareSerial`'s `println` method.
 This means that if `HardwareSerial` cannot print it, this library cannot either.
 
 However, the library provides advanced methods that allows the user to use the
-well-known `printf` syntax to issue a log message:
+well-known `printf` syntax to create a log message:
 
 ```C++
-static void logging::Logger::log(logging::Level level, const char * fmt, ...);
-static void logging::Logger::<level>(const char * fmt, ...);
+void logging::Logger::log(logging::Level level, const char * fmt, ...);
+void logging::Logger::{debug, info, warning, error, critical}(const char * fmt, ...);
 ```
 
 :warning: Please see the limitations that affect this way of logging:
@@ -107,15 +120,15 @@ static void logging::Logger::<level>(const char * fmt, ...);
   and disabled by default (in platformio). If you have the resources, you can
   modify your project's `platformio.ini` with
 
-  ```text
+  ```ini
   [env:stm32]
     build_flags = -D PIO_FRAMEWORK_ARDUINO_NANOLIB_FLOAT_PRINTF
-  # or
+  ; or
   [env:avr]
     build_flags = -Wl,-u,vfprintf -lprintf_flt -lm
   ```
 
-  See the [PlatformIO Community post] / [Github Thread] for details.
+  See the this [PlatformIO Community post] or the [Github Thread] for details.
 
   :rotating_light: If you use float strings without the above addition, your
   program might hang!
@@ -135,12 +148,12 @@ the internals so that the memory footprint stays very high.
 
 This can be resolved by defining the build flag
 
-```
-LOGGER_VOID_ALL
+```ini
+build_flags = 
+  -DLOGGER_VOID_ALL
 ```
 
 If defined, the preprocessor voids all internals, but keeps the interface up.
-Note that this also disables logging!
 
 ### Colorization
 
@@ -154,7 +167,9 @@ important messages. Known programs that support coloring are
 
 - picocom
 
-These colors were chosen so that the importance becomes obvious immediately:
+- the VS Code extension [Serial Monitor]
+
+The colors were chosen so that the importance becomes obvious immediately:
 
 - `DEBUG` : blue
 - `INFO` : green
@@ -166,18 +181,17 @@ Note that the PlatformIO monitor does not show the `CRITICAL` messages
 correctly. You might see just the background with a dark font.
 
 [ANSI coloring]: https://stackoverflow.com/a/33206814
+[Serial Monitor]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-serial-monitor
 
 ### Examples
 
-Check the [examples] or look at [serial-logger-meta]'s main code for an
-interactive test program.
+Check the [examples] folder for an example.
 
-[serial-logger-meta]: https://github.com/addivaku/serial-logger-meta
 [examples]: ./examples/
 
 ## Future development
 
-This section collects topics that will/can become part of the logger library.
+This section collects topics that will/might become part of the logger library.
 
 ### Road map
 
