@@ -5,13 +5,13 @@
   "keywords": [
     "serial",
     "logging"
-    ],
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/addivaku/serial-logger.git"
   },
   "authors": {
-    "name": "Adrian Brand",
+    "name": "addivaku",
     "email": "addivaku@gmail.com",
     "maintainer": true
   },
@@ -25,5 +25,24 @@
     ],
     "includeDir": "./src",
     "srcDir": "./src"
+  },
+  "platforms" : "*",
+  "frameworks" : [
+    "arduino"
+  ],
+  "examples" : [
+    {
+      "name" : "HelloWorld",
+      "base" : "examples/world",
+      "files" : [
+        "HelloWorld.cc"
+      ]
+    }
+  ],
+  "export" : {
+    "exclude" : [
+      ".git",
+      ".svn"
+    ]
   }
 }
