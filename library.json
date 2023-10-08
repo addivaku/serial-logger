@@ -1,0 +1,42 @@
+{
+  "name": "serial-logger",
+  "version": "0.1.0",
+  "description": "A lightweight and easy to use serial logger for Arduino",
+  "keywords": [
+    "serial",
+    "logging"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/addivaku/serial-logger.git"
+  },
+  "authors": {
+    "name": "addivaku",
+    "email": "addivaku@gmail.com",
+    "maintainer": true
+  },
+  "license": "MIT",
+  "build": {
+    "flags" : [
+      "-w"
+    ],
+    "srcFilter": [
+      "+<*> -<.git/> -<.svn/> -<example/> -<examples/> -<test/> -<tests/>"
+    ],
+    "includeDir": "./src",
+    "srcDir": "./src"
+  },
+  "platforms" : "*",
+  "frameworks" : [
+    "arduino"
+  ],
+  "examples" : [
+    {
+      "name" : "HelloWorld",
+      "base" : "examples/world",
+      "files" : [
+        "HelloWorld.cc"
+      ]
+    }
+  ]
+}
