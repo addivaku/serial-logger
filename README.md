@@ -3,8 +3,6 @@
 ![IDE](https://img.shields.io/badge/IDE-VS%20Code-blue?logo=visual-studio-code)
 ![cpp](https://img.shields.io/badge/Language-C%2B%2B-%2300599C?logo=C%2B%2B)
 ![Framework](https://img.shields.io/badge/Framework-Arduino-%2300979D?logo=arduino)
-![PlatformStm](https://img.shields.io/badge/Platform-STM32-%2303234B?logo=stmicroelectronics)
-![PlatformAvr](https://img.shields.io/badge/Platform-Atmel%20AVR-red)
 
 A simple and lightweight logging tool for the `Arduino` framework. Designed as
 `Platform IO` library, it provides the user with the ability to output logging
